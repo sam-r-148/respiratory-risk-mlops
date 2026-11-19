@@ -105,7 +105,50 @@ docker run -p 8000:8000 respiratory-risk
    retrain job can commit data/model back).
 5. *Actions → Daily retrain → Run workflow* to trigger it manually once; after that it runs every day.
    Screenshot a green run for your report.
-6. When a model is promoted, the image appears under your repo's **Packages** (`ghcr.io/<you>/<repo>`).
+6. When a model is promoted, the image is pushed to Amazon ECR (see the AWS section below).
+
+## Deploying on AWS (ECR + EC2)
+
+```
+GitHub Actions (retrain) ─► promoted? ─► docker build ─► Amazon ECR ─► EC2 pulls & runs ─► FastAPI :8000
+```
+
+| Piece | What it does |
+|---|---|
+| Amazon ECR (`respiratory-risk-api`, private, mutable tags) | Stores the Docker images (`latest` + run number) |
+| IAM user `github-actions-ecr-push` | Lets GitHub Actions push to that one repo only (least privilege) |
+| IAM role `mlops-ec2-role` (ECR read-only) | Lets the EC2 server pull images without any stored keys |
+| EC2 instance + security group | Runs the container; ports 22 and 8000 open to my IP only |
+
+**One-time setup**
+1. Create the ECR repository, the IAM push policy and the push user (see the repo's workflow for the exact actions needed).
+2. In GitHub → Settings → Secrets and variables → Actions, add secrets `AWS_ACCESS_KEY_ID` and
+   `AWS_SECRET_ACCESS_KEY`, and variables `AWS_REGION` and `ECR_REPOSITORY`.
+3. Launch EC2 (Amazon Linux 2023) with `mlops-ec2-role`, install Docker, then:
+   ```bash
+   aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <account-id>.dkr.ecr.<region>.amazonaws.com
+   docker run -d --name respiratory-api --restart unless-stopped -p 8000:8000 <account-id>.dkr.ecr.<region>.amazonaws.com/respiratory-risk-api:latest
+   ```
+4. Open `http://<ec2-public-ip>:8000/docs`.
+
+**Publish an image without waiting for a promotion:** Actions → Daily retrain → Run workflow → tick `force_publish`.
+
+**Update the server after a new image is published**
+```bash
+docker pull <ecr-uri>:latest && docker rm -f respiratory-api && docker run -d --name respiratory-api --restart unless-stopped -p 8000:8000 <ecr-uri>:latest
+```
+(Re-run the `docker login` line first if more than 12 hours have passed.)
+
+**Limitations (be ready to say these)**
+- The AWS free plan blocks IAM OIDC identity providers, so CI uses a long-lived access key stored as a
+  GitHub secret. OIDC (short-lived credentials, no stored key) is the better production choice.
+- Deployment to EC2 is manual; a new image in ECR does not update the running container by itself.
+- A single instance with a public IP that changes on stop/start; no load balancer, HTTPS or authentication.
+- MLflow runs locally / as a build artifact. RDS and S3 were deliberately skipped: the API loads the model
+  baked into the image, not from an MLflow registry.
+
+**Clean-up:** terminate the EC2 instance, delete the ECR repository, then delete the IAM user, policy, role and
+security group, so nothing keeps billing.
 
 ## Design decisions & honest limitations
 

@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-11-19T18:39:20+00:00",
+  "run_at": "2026-11-19T18:44:28+00:00",
   "n_rows": 332,
   "n_train": 272,
   "n_holdout": 60,
@@ -14,7 +14,10 @@
     "f1_macro": 0.7643097643097643,
     "accuracy": 0.7666666666666667
   },
-  "champion": null,
+  "champion": {
+    "f1_macro": 0.7643097643097643,
+    "accuracy": 0.7666666666666667
+  },
   "persistence_baseline_f1": 0.7783461210571185,
-  "promoted": true
+  "promoted": false
 }

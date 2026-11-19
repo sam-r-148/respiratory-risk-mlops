@@ -1,0 +1,80 @@
+{
+  "checked_at": "2026-11-19T18:44:24+00:00",
+  "window_days": 45,
+  "seasonal_reference": false,
+  "reference_rows": 272,
+  "share_drifted": 0.571,
+  "dataset_drift": true,
+  "features": {
+    "pm2_5_mean": {
+      "ks_pvalue": 0.1641,
+      "psi": 1.674,
+      "drifted": false
+    },
+    "pm10_mean": {
+      "ks_pvalue": 0.0001,
+      "psi": 3.166,
+      "drifted": true
+    },
+    "o3_max": {
+      "ks_pvalue": 0.0304,
+      "psi": 0.301,
+      "drifted": false
+    },
+    "no2_mean": {
+      "ks_pvalue": 0.0,
+      "psi": 1.512,
+      "drifted": true
+    },
+    "temp_mean": {
+      "ks_pvalue": 0.0001,
+      "psi": 4.64,
+      "drifted": true
+    },
+    "temp_min": {
+      "ks_pvalue": 0.0001,
+      "psi": 5.315,
+      "drifted": true
+    },
+    "temp_max": {
+      "ks_pvalue": 0.0002,
+      "psi": 3.254,
+      "drifted": true
+    },
+    "humidity_mean": {
+      "ks_pvalue": 0.0019,
+      "psi": 2.313,
+      "drifted": true
+    },
+    "wind_mean": {
+      "ks_pvalue": 0.0006,
+      "psi": 0.54,
+      "drifted": true
+    },
+    "precip_sum": {
+      "ks_pvalue": 0.2199,
+      "psi": 0.136,
+      "drifted": false
+    },
+    "score_today": {
+      "ks_pvalue": 0.0683,
+      "psi": 0.583,
+      "drifted": false
+    },
+    "pm2_5_lag1": {
+      "ks_pvalue": 0.1641,
+      "psi": 1.7,
+      "drifted": false
+    },
+    "pm2_5_roll3": {
+      "ks_pvalue": 0.0474,
+      "psi": 1.762,
+      "drifted": false
+    },
+    "pm2_5_roll7": {
+      "ks_pvalue": 0.0061,
+      "psi": 2.735,
+      "drifted": true
+    }
+  }
+}

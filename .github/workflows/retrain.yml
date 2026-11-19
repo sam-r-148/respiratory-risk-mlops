@@ -1,0 +1,83 @@
+name: Daily retrain
+
+on:
+  schedule:
+    - cron: "30 1 * * *"   # 07:00 IST every day
+  workflow_dispatch:         # lets you run it manually from the Actions tab
+
+concurrency:
+  group: retrain
+  cancel-in-progress: false
+
+permissions:
+  contents: write    # commit refreshed data + champion model
+  packages: write    # push the image to GitHub Container Registry
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    outputs:
+      promoted: ${{ steps.train.outputs.promoted }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: 1. Ingest fresh air quality + weather data
+        run: python -m src.ingest
+
+      - name: 2. Data drift report (vs. training reference)
+        run: python -m src.drift
+
+      - name: 3. Train challenger, compare with champion, promote if better
+        id: train
+        run: python -m src.train
+
+      - name: Upload run artifacts (MLflow runs + reports)
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrain-${{ github.run_number }}
+          path: |
+            mlruns
+            reports
+          if-no-files-found: ignore
+
+      - name: Commit updated data / champion model
+        run: |
+          git config user.name "retrain-bot"
+          git config user.email "retrain-bot@users.noreply.github.com"
+          git add data models reports
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "chore: daily data refresh (promoted=${{ steps.train.outputs.promoted }})"
+            git push
+          fi
+
+  publish:
+    # Only rebuild + publish the Docker image when a NEW champion was promoted.
+    needs: retrain
+    if: needs.retrain.outputs.promoted == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}   # pick up the commit the retrain job just pushed
+      - name: Lower-case image name
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.run_number }}

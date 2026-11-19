@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run unit tests (features, label, train gate, drift, API)
+        run: pytest -q
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t respiratory-risk:ci .
+      - name: Smoke-test the container
+        run: |
+          docker run -d --name api -p 8000:8000 respiratory-risk:ci
+          for i in $(seq 1 20); do
+            curl -sf http://127.0.0.1:8000/health && break || sleep 2
+          done
+          HEALTH=$(curl -sf http://127.0.0.1:8000/health)
+          echo "$HEALTH"
+          if echo "$HEALTH" | grep -q '"model_loaded":true'; then
+            curl -sf -X POST http://127.0.0.1:8000/predict \
+              -H "Content-Type: application/json" \
+              -d '{"pm2_5_mean":135,"pm10_mean":240,"o3_max":55,"no2_mean":62,"temp_mean":14,"temp_min":8.5,"temp_max":22,"humidity_mean":72,"wind_mean":4,"precip_sum":0}'
+          else
+            echo "No champion model committed yet - skipping /predict check"
+          fi
+      - name: Container logs on failure
+        if: failure()
+        run: docker logs api

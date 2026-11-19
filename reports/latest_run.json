@@ -1,0 +1,20 @@
+{
+  "run_at": "2026-11-19T18:39:20+00:00",
+  "n_rows": 332,
+  "n_train": 272,
+  "n_holdout": 60,
+  "train_end": "2026-09-19",
+  "holdout_end": "2026-11-18",
+  "cv_f1_macro": {
+    "random_forest": 0.49436053852054185,
+    "hist_gradient_boosting": 0.4719026444569923
+  },
+  "selected_model": "random_forest",
+  "challenger": {
+    "f1_macro": 0.7643097643097643,
+    "accuracy": 0.7666666666666667
+  },
+  "champion": null,
+  "persistence_baseline_f1": 0.7783461210571185,
+  "promoted": true
+}

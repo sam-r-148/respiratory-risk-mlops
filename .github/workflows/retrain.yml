@@ -11,7 +11,7 @@ concurrency:
 
 permissions:
   contents: write    # commit refreshed data + champion model
-  packages: write    # push the image to GitHub Container Registry
+  id-token: write    # lets the publish job get temporary AWS credentials via OIDC
 
 jobs:
   retrain:
@@ -67,17 +67,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}   # pick up the commit the retrain job just pushed
-      - name: Lower-case image name
-        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
-      - uses: docker/login-action@v3
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE }}:latest
-            ${{ env.IMAGE }}:${{ github.run_number }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:latest
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.run_number }}

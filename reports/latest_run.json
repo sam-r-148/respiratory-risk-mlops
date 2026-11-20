@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-11-19T20:05:32+00:00",
+  "run_at": "2026-11-20T05:01:18+00:00",
   "n_rows": 332,
   "n_train": 272,
   "n_holdout": 60,
@@ -19,5 +19,11 @@
     "accuracy": 0.7666666666666667
   },
   "persistence_baseline_f1": 0.7783461210571185,
-  "promoted": false
+  "gate_metric": "f1_macro",
+  "min_improvement": 0.0,
+  "eligible_for_promotion": false,
+  "auto_promote": true,
+  "promoted": false,
+  "decision": "RETAINED",
+  "decision_reason": "Candidate macro-F1 0.7643 does not exceed champion macro-F1 0.7643 + margin 0.0; champion retained."
 }

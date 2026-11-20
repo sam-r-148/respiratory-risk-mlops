@@ -34,20 +34,27 @@ jobs:
       - name: 1. Ingest fresh air quality + weather data
         run: python -m src.ingest
 
-      - name: 2. Data drift report (vs. training reference)
+      - name: 2. Validate the new data batch (Task A)
+        run: python -m src.validate
+
+      - name: 3. Evaluate the current champion on new labelled data (Task B)
+        run: python -m src.evaluate
+
+      - name: 4. Data drift report (vs. training reference)
         run: python -m src.drift
 
-      - name: 3. Train challenger, compare with champion, promote if better
+      - name: 5. Train candidate + quality gate, promote only if better (Tasks C and D)
         id: train
         run: python -m src.train
 
-      - name: Upload run artifacts (MLflow runs + reports)
+      - name: Upload run artifacts (MLflow runs, reports, candidate model)
         uses: actions/upload-artifact@v4
         with:
           name: retrain-${{ github.run_number }}
           path: |
             mlruns
             reports
+            models/candidate
           if-no-files-found: ignore
 
       - name: Commit updated data / champion model

@@ -30,3 +30,17 @@ HOLDOUT_DAYS = int(os.getenv("HOLDOUT_DAYS", "60"))      # most recent days used
 MIN_ROWS = int(os.getenv("MIN_ROWS", "100"))             # refuse to train on less data
 MIN_IMPROVEMENT = float(os.getenv("MIN_IMPROVEMENT", "0.0"))  # challenger must beat champion by this much (macro-F1)
 RANDOM_STATE = 42
+
+# Columns every incoming data batch must contain (checked by src/validate.py)
+REQUIRED_COLS = ["date"] + BASE_COLS
+
+# Quality gate. The gate metric is macro-F1 (see README / WORKFLOW.md for the justification).
+GATE_METRIC = "f1_macro"
+# If false, an eligible candidate is only *marked* eligible and the champion is left untouched
+# until a human promotes it. Default true = automatic promotion (always recorded in the decision log).
+AUTO_PROMOTE = os.getenv("AUTO_PROMOTE", "true").strip().lower() not in ("0", "false", "no")
+
+
+def candidate_dir_for(model_dir) -> Path:
+    """The candidate model lives next to the champion (models/candidate next to models/champion)."""
+    return Path(model_dir).parent / "candidate"

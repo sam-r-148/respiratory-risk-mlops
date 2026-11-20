@@ -150,6 +150,25 @@ docker pull <ecr-uri>:latest && docker rm -f respiratory-api && docker run -d --
 **Clean-up:** terminate the EC2 instance, delete the ECR repository, then delete the IAM user, policy, role and
 security group, so nothing keeps billing.
 
+## Monitoring and retraining workflow (assessment Tasks A-E)
+
+One command runs it all and prints the evidence; the same steps run daily in GitHub Actions.
+
+```bash
+python -m src.pipeline            # add --ingest to pull the newest data first
+```
+
+| Task | Module | Output |
+|---|---|---|
+| A - validate new data (columns, missing values, duplicates, size, target distribution) | `src/validate.py` | `reports/data_validation.json` |
+| B - evaluate the existing champion on unseen labelled days (accuracy, precision, recall, F1, confusion matrix) | `src/evaluate.py` | `reports/evaluation_report.json` |
+| C - retrain a candidate on existing + new data, saved separately, tracked in MLflow | `src/train.py` | `models/candidate/` |
+| D - quality gate on macro-F1, decision recorded before any promotion | `src/train.py` | `reports/decision_log.jsonl` |
+| E - run and explain the whole workflow | `src/pipeline.py`, [WORKFLOW.md](WORKFLOW.md) | console + the files above |
+
+The gate metric is macro-F1 because the classes are imbalanced (see [WORKFLOW.md](WORKFLOW.md) for the full
+justification). `AUTO_PROMOTE=false` marks an eligible candidate without replacing the champion.
+
 ## Design decisions & honest limitations
 
 - **Why a gate?** A daily retrain can produce a worse model by chance. The champion/challenger gate

@@ -7,4 +7,5 @@ mlruns
 tests
 data
 reports
+models/candidate
 .pytest_cache

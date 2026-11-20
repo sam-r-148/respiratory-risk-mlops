@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-11-20T05:01:14+00:00",
+  "n_rows": 344,
+  "n_columns": 12,
+  "date_from": "2025-11-20",
+  "date_to": "2026-11-19",
+  "usable_labelled_rows": 332,
+  "required_columns": [
+    "date",
+    "pm2_5_mean",
+    "pm10_mean",
+    "o3_max",
+    "no2_mean",
+    "temp_mean",
+    "temp_min",
+    "temp_max",
+    "humidity_mean",
+    "wind_mean",
+    "precip_sum"
+  ],
+  "missing_columns": [],
+  "missing_values": {},
+  "duplicate_dates": 0,
+  "duplicate_rows": 0,
+  "target_distribution": {
+    "Low": {
+      "count": 6,
+      "percent": 1.8
+    },
+    "Moderate": {
+      "count": 118,
+      "percent": 35.5
+    },
+    "High": {
+      "count": 208,
+      "percent": 62.7
+    }
+  },
+  "errors": [],
+  "warnings": [],
+  "ok": true
+}

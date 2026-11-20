@@ -4,5 +4,7 @@ __pycache__/
 .pytest_cache/
 mlruns/
 .env
+# The candidate model is rebuilt on every run; it is kept as a workflow artifact, not committed.
+models/candidate/
 # data/daily.csv, models/champion/ and reports/ ARE committed on purpose:
 # the daily retrain workflow commits updated data + the current champion model back to the repo.

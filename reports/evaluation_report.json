@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T09:00:42+00:00",
+  "checked_at": "2026-11-21T08:41:55+00:00",
   "skipped": false,
   "champion": {
     "model": "random_forest",
@@ -7,23 +7,23 @@
     "train_end": "2026-09-19"
   },
   "new_data": {
-    "n_rows": 60,
+    "n_rows": 61,
     "from": "2026-09-20",
-    "to": "2026-11-18",
+    "to": "2026-11-19",
     "target_distribution": {
       "Low": 0,
       "Moderate": 25,
-      "High": 35
+      "High": 36
     }
   },
   "champion_metrics": {
-    "accuracy": 0.7666666666666667,
-    "precision_macro": 0.7641824249165741,
-    "recall_macro": 0.7714285714285715,
-    "f1_macro": 0.7643097643097643,
-    "precision_weighted": 0.7766036336670374,
-    "recall_weighted": 0.7666666666666667,
-    "f1_weighted": 0.7682379349046016,
+    "accuracy": 0.7704918032786885,
+    "precision_macro": 0.7667025862068966,
+    "recall_macro": 0.775,
+    "f1_macro": 0.7674291938997821,
+    "precision_weighted": 0.7805963821368004,
+    "recall_weighted": 0.7704918032786885,
+    "f1_weighted": 0.7722418657809207,
     "per_class": {
       "Low": {
         "precision": 0.0,
@@ -38,10 +38,10 @@
         "support": 25
       },
       "High": {
-        "precision": 0.8387096774193549,
-        "recall": 0.7428571428571429,
-        "f1": 0.7878787878787878,
-        "support": 35
+        "precision": 0.84375,
+        "recall": 0.75,
+        "f1": 0.7941176470588235,
+        "support": 36
       }
     },
     "confusion_matrix": {
@@ -66,19 +66,19 @@
         [
           0,
           9,
-          26
+          27
         ]
       ]
     }
   },
   "persistence_baseline_metrics": {
-    "accuracy": 0.7833333333333333,
-    "precision_macro": 0.7771493212669682,
-    "recall_macro": 0.78,
-    "f1_macro": 0.7783461210571185,
-    "precision_weighted": 0.7848793363499245,
-    "recall_weighted": 0.7833333333333333,
-    "f1_weighted": 0.7838874680306905,
+    "accuracy": 0.7868852459016393,
+    "precision_macro": 0.7796703296703297,
+    "recall_macro": 0.7827777777777778,
+    "f1_macro": 0.7809997238331953,
+    "precision_weighted": 0.7884885606197082,
+    "recall_weighted": 0.7868852459016393,
+    "f1_weighted": 0.7874737981084838,
     "per_class": {
       "Low": {
         "precision": 0.0,
@@ -93,10 +93,10 @@
         "support": 25
       },
       "High": {
-        "precision": 0.8235294117647058,
-        "recall": 0.8,
-        "f1": 0.8115942028985508,
-        "support": 35
+        "precision": 0.8285714285714286,
+        "recall": 0.8055555555555556,
+        "f1": 0.8169014084507042,
+        "support": 36
       }
     },
     "confusion_matrix": {
@@ -121,7 +121,7 @@
         [
           0,
           7,
-          28
+          29
         ]
       ]
     }

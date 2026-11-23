@@ -1,29 +1,29 @@
 {
-  "run_at": "2026-11-22T08:40:28+00:00",
-  "n_rows": 334,
-  "n_train": 274,
+  "run_at": "2026-11-23T09:38:19+00:00",
+  "n_rows": 335,
+  "n_train": 275,
   "n_holdout": 60,
-  "train_end": "2026-09-21",
-  "holdout_end": "2026-11-20",
+  "train_end": "2026-09-22",
+  "holdout_end": "2026-11-21",
   "cv_f1_macro": {
-    "random_forest": 0.5036973807987037,
-    "hist_gradient_boosting": 0.4715750431987622
+    "random_forest": 0.5238681387518597,
+    "hist_gradient_boosting": 0.42080350405853867
   },
   "selected_model": "random_forest",
   "challenger": {
+    "f1_macro": 0.7413049726933026,
+    "accuracy": 0.75
+  },
+  "champion": {
     "f1_macro": 0.76,
     "accuracy": 0.7666666666666667
   },
-  "champion": {
-    "f1_macro": 0.7624434389140271,
-    "accuracy": 0.7666666666666667
-  },
-  "persistence_baseline_f1": 0.7726610317691636,
+  "persistence_baseline_f1": 0.768888888888889,
   "gate_metric": "f1_macro",
   "min_improvement": 0.0,
   "eligible_for_promotion": false,
   "auto_promote": true,
   "promoted": false,
   "decision": "RETAINED",
-  "decision_reason": "Candidate macro-F1 0.7600 does not exceed champion macro-F1 0.7624 + margin 0.0; champion retained."
+  "decision_reason": "Candidate macro-F1 0.7413 does not exceed champion macro-F1 0.7600 + margin 0.0; champion retained."
 }

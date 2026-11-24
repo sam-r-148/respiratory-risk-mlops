@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-11-23T09:38:14+00:00",
-  "n_rows": 347,
+  "checked_at": "2026-11-24T11:30:35+00:00",
+  "n_rows": 348,
   "n_columns": 12,
   "date_from": "2025-11-20",
-  "date_to": "2026-11-22",
-  "usable_labelled_rows": 335,
+  "date_to": "2026-11-23",
+  "usable_labelled_rows": 336,
   "required_columns": [
     "date",
     "pm2_5_mean",
@@ -29,11 +29,11 @@
     },
     "Moderate": {
       "count": 118,
-      "percent": 35.2
+      "percent": 35.1
     },
     "High": {
-      "count": 211,
-      "percent": 63.0
+      "count": 212,
+      "percent": 63.1
     }
   },
   "errors": [],
